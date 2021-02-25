@@ -34,12 +34,12 @@ RUN apk add --no-cache curl wget patch tar bash \
 RUN overlay_url="$(curl -s https://api.github.com/repos/just-containers/s6-overlay/releases/latest | \
   grep -o "browser_download_url.*s6-overlay-amd64-installer" | cut -d ":" -f 2,3 | tr -d \" | sort -u)" \
 && wget -O /tmp/s6-overlay-amd64-installer $overlay_url
-RUN chmod +x /tmp/s6-overlay-amd64-installer && /tmp/s6-overlay-amd64-installer / && rm /tmp/s6-overlay-amd64-installer
-#&& mkdir -p /etc/fix-attrs.d \
-#&& mkdir -p /etc/services.d \
-#&& curl -s -O https://bin.equinox.io/c/VdrWdbjqyF/cloudflared-stable-linux-amd64.tgz \
-#        && tar zxf cloudflared-stable-linux-amd64.tgz \
-#        && mv cloudflared /bin
+RUN chmod +x /tmp/s6-overlay-amd64-installer && /tmp/s6-overlay-amd64-installer / && rm /tmp/s6-overlay-amd64-installer \
+&& mkdir -p /etc/fix-attrs.d \
+&& mkdir -p /etc/services.d \
+&& curl -s -O https://bin.equinox.io/c/VdrWdbjqyF/cloudflared-stable-linux-amd64.tgz \
+        && tar zxf cloudflared-stable-linux-amd64.tgz \
+        && mv cloudflared /bin
 
 COPY patch/ /tmp/patch
 
