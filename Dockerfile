@@ -40,7 +40,7 @@ RUN cd /tmp \
 && /tmp/s6-overlay-amd64-installer \
 && mkdir -p /etc/fix-attrs.d \
 && mkdir -p /etc/services.d \
-curl -s -O https://bin.equinox.io/c/VdrWdbjqyF/cloudflared-stable-linux-amd64.tgz \
+&& curl -s -O https://bin.equinox.io/c/VdrWdbjqyF/cloudflared-stable-linux-amd64.tgz \
         && tar zxf cloudflared-stable-linux-amd64.tgz \
         && mv cloudflared /bin \
 
