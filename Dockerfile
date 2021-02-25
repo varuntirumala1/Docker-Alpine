@@ -27,8 +27,6 @@ RUN curl -o /mkimage-alpine.bash -L https://raw.githubusercontent.com/gliderlabs
 # Runtime stage
 FROM scratch
 COPY --from=rootfs-stage /root-out/ /
-ARG BUILD_DATE
-ARG VERSION
 
 RUN apk add --no-cache curl wget patch tar 
 
@@ -38,7 +36,7 @@ RUN cd /tmp \
   cut -d ":" -f 2,3 | tr -d \" | \
   wget -qi - \
 && chmod +x /tmp/s6-overlay-amd64-installer \
-&& /tmp/s6-overlay-amd64-installer \
+&& ./tmp/s6-overlay-amd64-installer \
 && rm /tmp/s6-overlay-amd64-installer
 
 COPY patch/ /tmp/patch
