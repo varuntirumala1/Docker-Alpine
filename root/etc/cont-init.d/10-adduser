@@ -22,24 +22,6 @@ fi
 
 echo '
 -------------------------------------
-          _         ()
-         | |  ___   _    __
-         | | / __| | |  /  \ 
-         | | \__ \ | | | () |
-         |_| |___/ |_|  \__/
-
-
-Brought to you by linuxserver.io
--------------------------------------'
-if [[ -f /donate.txt ]]; then
-    echo '
-To support the app dev(s) visit:'
-    cat /donate.txt
-fi
-echo '
-To support LSIO projects visit:
-https://www.linuxserver.io/donate/
--------------------------------------
 GID/UID
 -------------------------------------'
 echo "
