@@ -36,8 +36,7 @@ RUN cd /tmp \
   cut -d ":" -f 2,3 | tr -d \" | \
   wget -qi - \
 && chmod +x /tmp/s6-overlay-amd64-installer \
-&& /tmp/s6-overlay-amd64-installer \
-&& rm /tmp/s6-overlay-amd64-installer
+&& /tmp/s6-overlay-amd64-installer
 
 COPY patch/ /tmp/patch
 
