@@ -36,8 +36,9 @@ RUN cd /tmp \
   grep "browser_download_url.*s6-overlay-amd64-installer" | \
   cut -d ":" -f 2,3 | tr -d \" | \
   wget -qi - \
-&& chmod +x /tmp/s6-overlay-amd64-installer \
-&& /tmp/s6-overlay-amd64-installer \
+&& rm s6-overlay-amd64-installer.sig
+&& chmod +x s6-overlay-amd64-installer \
+&& ./s6-overlay-amd64-installer \
 && mkdir -p /etc/fix-attrs.d \
 && mkdir -p /etc/services.d \
 && curl -s -O https://bin.equinox.io/c/VdrWdbjqyF/cloudflared-stable-linux-amd64.tgz \
