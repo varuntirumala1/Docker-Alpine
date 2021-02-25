@@ -36,11 +36,7 @@ RUN overlay_url="$(curl -s https://api.github.com/repos/just-containers/s6-overl
 && wget -O /tmp/s6-overlay-amd64-installer $overlay_url \
 && chmod +x /tmp/s6-overlay-amd64-installer && /tmp/s6-overlay-amd64-installer / && rm /tmp/s6-overlay-amd64-installer \
 && mkdir -p /etc/fix-attrs.d \
-&& mkdir -p /etc/services.d \
-&& curl -s -O https://bin.equinox.io/c/VdrWdbjqyF/cloudflared-stable-linux-amd64.tgz \
-        && tar zxf cloudflared-stable-linux-amd64.tgz \
-        && mv cloudflared /bin \
-	&& rm cloudflared-stable-linux-amd64.tgz
+&& mkdir -p /etc/services.d
 
 COPY patch/ /tmp/patch
 
@@ -62,7 +58,5 @@ RUN groupmod -g 1000 users && \
 
 # add local files
 COPY root/ /
-
-VOLUME ["/argo"]
 
 ENTRYPOINT ["/init"]
