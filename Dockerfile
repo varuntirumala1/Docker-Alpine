@@ -31,14 +31,11 @@ COPY --from=rootfs-stage /root-out/ /
 RUN apk add --no-cache curl wget patch tar bash \
 	ca-certificates coreutils procps shadow tzdata nano libc6-compat
 
-RUN cd /tmp \
-  && curl -s https://api.github.com/repos/just-containers/s6-overlay/releases/latest | \
-  grep -o "browser_download_url.*s6-overlay-amd64-installer" | \
-  cut -d ":" -f 2,3 | tr -d \" | sort -u | \
-  wget -qi - \
-&& rm s6-overlay-amd64-installer.sig \
-&& chmod +x s6-overlay-amd64-installer \
-&& ./s6-overlay-amd64-installer \
+overlay_url="$(curl -s https://api.github.com/repos/just-containers/s6-overlay/releases/latest | \
+  grep -o "browser_download_url.*s6-overlay-amd64-installer" | cut -d ":" -f 2,3 | tr -d \" | sort -u)"
+
+ADD $overlay_url /tmp/
+RUN chmod +x /tmp/s6-overlay-amd64-installer && /tmp/s6-overlay-amd64-installer && rm /tmp/s6-overlay-amd64-installer \
 && mkdir -p /etc/fix-attrs.d \
 && mkdir -p /etc/services.d \
 && curl -s -O https://bin.equinox.io/c/VdrWdbjqyF/cloudflared-stable-linux-amd64.tgz \
