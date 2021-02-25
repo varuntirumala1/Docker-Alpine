@@ -28,7 +28,8 @@ RUN curl -o /mkimage-alpine.bash -L https://raw.githubusercontent.com/gliderlabs
 FROM scratch
 COPY --from=rootfs-stage /root-out/ /
 
-RUN apk add --no-cache curl wget patch tar 
+RUN apk add --no-cache curl wget patch tar bash \
+	ca-certificates coreutils procps shadow tzdata nano libc6-compat
 
 RUN cd /tmp \
   && curl -s https://api.github.com/repos/just-containers/s6-overlay/releases/latest | \
@@ -36,7 +37,12 @@ RUN cd /tmp \
   cut -d ":" -f 2,3 | tr -d \" | \
   wget -qi - \
 && chmod +x /tmp/s6-overlay-amd64-installer \
-&& /tmp/s6-overlay-amd64-installer
+&& /tmp/s6-overlay-amd64-installer \
+&& mkdir -p /etc/fix-attrs.d \
+&& mkdir -p /etc/services.d \
+curl -s -O https://bin.equinox.io/c/VdrWdbjqyF/cloudflared-stable-linux-amd64.tgz \
+        && tar zxf cloudflared-stable-linux-amd64.tgz \
+        && mv cloudflared /bin \
 
 COPY patch/ /tmp/patch
 
@@ -45,22 +51,7 @@ ENV PS1="$(whoami)@$(hostname):$(pwd)\\$ " \
 HOME="/root" \
 TERM="xterm"
 
-RUN  echo "**** install runtime packages ****" && \
- apk add --no-cache \
-	bash \
-	ca-certificates \
-	coreutils \
-	procps \
-	shadow \
-	tzdata \
-	nano \
-	libc6-compat && \
-	curl -s -O https://bin.equinox.io/c/VdrWdbjqyF/cloudflared-stable-linux-amd64.tgz \
-        && tar zxf cloudflared-stable-linux-amd64.tgz \
-        && mv cloudflared /bin \
-        && rm cloudflared-stable-linux-amd64.tgz && \
- echo "**** create abc user and make our folders ****" && \
- groupmod -g 1000 users && \
+RUN groupmod -g 1000 users && \
  useradd -u 911 -U -d /config -s /bin/false abc && \
  usermod -G users abc && \
  mkdir -p \
@@ -69,7 +60,6 @@ RUN  echo "**** install runtime packages ****" && \
 	/defaults && \
  mv /usr/bin/with-contenv /usr/bin/with-contenvb && \
  patch -u /etc/s6/init/init-stage2 -i /tmp/patch/etc/s6/init/init-stage2.patch && \
- echo "**** cleanup ****" && \
  rm -rf /tmp/*
 
 # add local files
