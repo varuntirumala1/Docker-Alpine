@@ -12,8 +12,7 @@ libc-utils,\
 xz
 
 # install packages
-RUN \
- apk add --no-cache \
+RUN apk add --no-cache \
 	bash \
 	curl \
 	tzdata \
@@ -31,6 +30,8 @@ COPY --from=rootfs-stage /root-out/ /
 ARG BUILD_DATE
 ARG VERSION
 
+RUN apk add --no-cache curl wget patch tar 
+
 RUN cd /tmp \
   && curl -s https://api.github.com/repos/just-containers/s6-overlay/releases/latest | \
   grep "browser_download_url.*s6-overlay-amd64-installer" | \
@@ -47,12 +48,7 @@ ENV PS1="$(whoami)@$(hostname):$(pwd)\\$ " \
 HOME="/root" \
 TERM="xterm"
 
-RUN echo "**** install build packages ****" && \
- apk add --no-cache --virtual=build-dependencies \
-	curl \
-	patch \
-	tar && \
- echo "**** install runtime packages ****" && \
+RUN  echo "**** install runtime packages ****" && \
  apk add --no-cache \
 	bash \
 	ca-certificates \
@@ -61,8 +57,6 @@ RUN echo "**** install build packages ****" && \
 	shadow \
 	tzdata \
 	nano \
-	wget \
-	curl \
 	libc6-compat && \
 	curl -s -O https://bin.equinox.io/c/VdrWdbjqyF/cloudflared-stable-linux-amd64.tgz \
         && tar zxf cloudflared-stable-linux-amd64.tgz \
@@ -79,7 +73,6 @@ RUN echo "**** install build packages ****" && \
  mv /usr/bin/with-contenv /usr/bin/with-contenvb && \
  patch -u /etc/s6/init/init-stage2 -i /tmp/patch/etc/s6/init/init-stage2.patch && \
  echo "**** cleanup ****" && \
- apk del --purge build-dependencies && \
  rm -rf /tmp/*
 
 # add local files
