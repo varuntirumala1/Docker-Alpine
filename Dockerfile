@@ -31,9 +31,8 @@ COPY --from=rootfs-stage /root-out/ /
 RUN apk add --no-cache curl wget patch tar bash \
 	ca-certificates coreutils procps shadow tzdata nano libc6-compat
 
-overlay_url="$(curl -s https://api.github.com/repos/just-containers/s6-overlay/releases/latest | \
+RUN overlay_url="$(curl -s https://api.github.com/repos/just-containers/s6-overlay/releases/latest | \
   grep -o "browser_download_url.*s6-overlay-amd64-installer" | cut -d ":" -f 2,3 | tr -d \" | sort -u)"
-
 ADD $overlay_url /tmp/
 RUN chmod +x /tmp/s6-overlay-amd64-installer && /tmp/s6-overlay-amd64-installer && rm /tmp/s6-overlay-amd64-installer \
 && mkdir -p /etc/fix-attrs.d \
