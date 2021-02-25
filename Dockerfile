@@ -33,8 +33,8 @@ RUN apk add --no-cache curl wget patch tar bash \
 
 RUN cd /tmp \
   && curl -s https://api.github.com/repos/just-containers/s6-overlay/releases/latest | \
-  grep "browser_download_url.*s6-overlay-amd64-installer" | \
-  cut -d ":" -f 2,3 | tr -d \" | \
+  grep -o "browser_download_url.*s6-overlay-amd64-installer" | \
+  cut -d ":" -f 2,3 | tr -d \" | sort -u | \
   wget -qi - \
 && rm s6-overlay-amd64-installer.sig \
 && chmod +x s6-overlay-amd64-installer \
